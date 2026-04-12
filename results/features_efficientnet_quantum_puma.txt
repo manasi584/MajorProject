@@ -1,0 +1,93 @@
+
+============================================================
+Configuration: K-FOLD CV WITH SIMPLE FC MODEL
+============================================================
+Features:        ./features_efficientnet.npz
+Feature Selection: quantum_puma
+K-Folds:         5
+Epochs:          30
+Batch Size:      32
+Results file:    ./results/features_efficientnet_quantum_puma.txt
+Loading features from ./features_efficientnet.npz...
+  Features shape: (12240, 1280)
+  DCP shape: (12240, 1)
+  Labels shape: (12240,)
+
+Combined features shape: (12240, 1281)
+
+Initializing feature selection with quantum_puma...
+
+============================================================
+FEATURE SELECTION - QuantumSuperpositionMutationPumaOptimizer
+============================================================
+
+============================================================
+FEATURE SELECTION - QUANTUM PUMA OPTIMIZER
+============================================================
+
+Configuration:
+  Population: 30 pumas
+  Iterations: 100
+  Hunt Intensity: 0.5
+  Exploration Rate: 0.5
+
+Initializing puma population...
+  Early stopping at iteration 1
+Optimization Complete!
+============================================================
+
+
+✓ Selected 500 features (from 1281)
+  Top 5 feature indices: [ 0  4  9 10 11]
+============================================================
+
+
+Using 500 selected features
+
+
+============================================================
+K-FOLD EVALUATION (5-fold CV)
+============================================================
+
+Class distribution: [  85 3110 1498 2897 1320 3330]
+Train shape: (9792, 500), Test shape: (2448, 500)
+
+Starting 5-fold CV...
+
+
+🔥 Fold 1/5
+  ✓ Fold 1 complete (epochs: 25)
+
+🔥 Fold 2/5
+  ✓ Fold 2 complete (epochs: 30)
+
+🔥 Fold 3/5
+  ✓ Fold 3 complete (epochs: 18)
+
+🔥 Fold 4/5
+  ✓ Fold 4 complete (epochs: 18)
+
+🔥 Fold 5/5
+  ✓ Fold 5 complete (epochs: 30)
+
+============================================================
+RESULTS
+============================================================
+K-FOLD CV Accuracy:  0.9744 (97.44%)
+TEST ACCURACY:       0.9886 (98.86%)
+============================================================
+
+Classification Report (Test Set):
+                precision    recall  f1-score   support
+
+          Good       1.00      1.00      1.00        17
+      Moderate       0.99      0.99      0.99       622
+           USG       0.99      0.98      0.99       300
+     Unhealthy       0.98      0.99      0.99       579
+Very Unhealthy       0.99      0.99      0.99       264
+     Hazardous       0.99      0.99      0.99       666
+
+      accuracy                           0.99      2448
+     macro avg       0.99      0.99      0.99      2448
+  weighted avg       0.99      0.99      0.99      2448
+

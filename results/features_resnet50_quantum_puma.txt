@@ -1,0 +1,63 @@
+
+============================================================
+Configuration: K-FOLD CV WITH SIMPLE FC MODEL
+============================================================
+Features:        ./features_resnet50.npz
+Feature Selection: quantum_puma
+K-Folds:         5
+Epochs:          30
+Batch Size:      32
+Results file:    ./results/features_resnet50_quantum_puma.txt
+Loading features from ./features_resnet50.npz...
+  Features shape: (12240, 2048)
+  DCP shape: (12240, 1)
+  Labels shape: (12240,)
+
+Combined features shape: (12240, 2049)
+
+============================================================
+K-FOLD EVALUATION (5-fold CV)
+============================================================
+
+Class distribution: [  85 3110 1498 2897 1320 3330]
+Train shape: (9792, 2049), Test shape: (2448, 2049)
+
+Starting 5-fold CV...
+
+
+🔥 Fold 1/5
+  ✓ Fold 1 complete (epochs: 16)
+
+🔥 Fold 2/5
+  ✓ Fold 2 complete (epochs: 30)
+
+🔥 Fold 3/5
+  ✓ Fold 3 complete (epochs: 22)
+
+🔥 Fold 4/5
+  ✓ Fold 4 complete (epochs: 30)
+
+🔥 Fold 5/5
+  ✓ Fold 5 complete (epochs: 21)
+
+============================================================
+RESULTS
+============================================================
+K-FOLD CV Accuracy:  0.9778 (97.78%)
+TEST ACCURACY:       0.9853 (98.53%)
+============================================================
+
+Classification Report (Test Set):
+                precision    recall  f1-score   support
+
+          Good       1.00      1.00      1.00        17
+      Moderate       0.98      0.99      0.99       622
+           USG       0.99      0.96      0.97       300
+     Unhealthy       0.98      0.99      0.98       579
+Very Unhealthy       0.99      0.99      0.99       264
+     Hazardous       0.99      0.99      0.99       666
+
+      accuracy                           0.99      2448
+     macro avg       0.99      0.99      0.99      2448
+  weighted avg       0.99      0.99      0.99      2448
+

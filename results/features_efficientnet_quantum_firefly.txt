@@ -1,0 +1,106 @@
+
+============================================================
+Configuration: K-FOLD CV WITH SIMPLE FC MODEL
+============================================================
+Features:        ./features_efficientnet.npz
+Feature Selection: quantum_firefly
+K-Folds:         5
+Epochs:          30
+Batch Size:      32
+Results file:    ./results/features_efficientnet_quantum_firefly.txt
+Loading features from ./features_efficientnet.npz...
+  Features shape: (12240, 1280)
+  DCP shape: (12240, 1)
+  Labels shape: (12240,)
+
+Combined features shape: (12240, 1281)
+
+Initializing feature selection with quantum_firefly...
+
+============================================================
+FEATURE SELECTION - QuantumFireflyOptimizer
+============================================================
+
+============================================================
+FEATURE SELECTION - QUANTUM FIREFLY OPTIMIZER
+============================================================
+
+Configuration:
+  Fireflies: 30
+  Iterations: 100
+  Attraction: 0.5
+  Randomness: 0.3
+  Quantum Factor: 0.1
+
+Initializing firefly population...
+  Early stopping at iteration 2
+
+Hybrid Refinement: Fine-tuning with gradient descent...
+  Refinement improved: 0.344019
+  Refinement improved: 0.184385
+  Refinement improved: 0.132315
+  Refinement improved: 0.108522
+  Refinement improved: 0.103208
+  Refinement improved: 0.100567
+  Refinement improved: 0.098248
+  Refinement improved: 0.088129
+  Refinement improved: 0.076556
+  Refinement improved: 0.068403
+Optimization Complete!
+============================================================
+
+
+✓ Selected 500 features (from 1281)
+  Top 5 feature indices: [ 1  2  4  6 13]
+============================================================
+
+
+Using 500 selected features
+
+
+============================================================
+K-FOLD EVALUATION (5-fold CV)
+============================================================
+
+Class distribution: [  85 3110 1498 2897 1320 3330]
+Train shape: (9792, 500), Test shape: (2448, 500)
+
+Starting 5-fold CV...
+
+
+🔥 Fold 1/5
+  ✓ Fold 1 complete (epochs: 22)
+
+🔥 Fold 2/5
+  ✓ Fold 2 complete (epochs: 28)
+
+🔥 Fold 3/5
+  ✓ Fold 3 complete (epochs: 15)
+
+🔥 Fold 4/5
+  ✓ Fold 4 complete (epochs: 29)
+
+🔥 Fold 5/5
+  ✓ Fold 5 complete (epochs: 23)
+
+============================================================
+RESULTS
+============================================================
+K-FOLD CV Accuracy:  0.9815 (98.15%)
+TEST ACCURACY:       0.9857 (98.57%)
+============================================================
+
+Classification Report (Test Set):
+                precision    recall  f1-score   support
+
+          Good       1.00      1.00      1.00        17
+      Moderate       0.98      0.99      0.99       622
+           USG       1.00      0.97      0.98       300
+     Unhealthy       0.98      0.98      0.98       579
+Very Unhealthy       0.99      0.99      0.99       264
+     Hazardous       0.99      0.99      0.99       666
+
+      accuracy                           0.99      2448
+     macro avg       0.99      0.99      0.99      2448
+  weighted avg       0.99      0.99      0.99      2448
+
