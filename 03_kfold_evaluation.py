@@ -324,8 +324,8 @@ def kfold_evaluation(X_features, y_labels, n_splits=5, epochs=30, batch_size=32,
 
 if __name__ == "__main__":
     # Configuration
-    FEATURES_PATH = "./features_efficientnet.npz"  # or features_resnet50.npz
-    FEATURE_SELECTION = "quantum_firefly"  # Options: "none", "quantum_puma", "quantum_firefly", "quantum_reptile"
+    FEATURES_PATH = "./features_mobilenet.npz"  # or features_resnet50.npz
+    FEATURE_SELECTION = "quantum_firefly"  # Options: "none", "quantum_puma", "quantum_firefly", "quantum_reptile", "firefly"
     N_FEATURES = 500  # Number of features to select (None = keep all)
 
     N_SPLITS = 5
@@ -423,6 +423,20 @@ if __name__ == "__main__":
                 'encircle_factor': 0.5,
                 'hunt_factor': 0.3,
                 'mutation_rate': 0.1,
+                'batch_size': 32
+            }
+        elif FEATURE_SELECTION == "firefly":
+            spec = importlib.util.spec_from_file_location(
+                "firefly", "./02_feature_selection_firefly.py"
+            )
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            optimizer_class = mod.FireflyOptimizer
+            optimizer_params = {
+                'n_fireflies': 30,
+                'max_iterations': 100,
+                'attraction': 0.5,
+                'randomness': 0.3,
                 'batch_size': 32
             }
         else:
