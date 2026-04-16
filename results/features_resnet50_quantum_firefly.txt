@@ -93,14 +93,27 @@ TEST ACCURACY:       0.9669 (96.69%)
 Classification Report (Test Set):
                 precision    recall  f1-score   support
 
-          Good       1.00      0.94      0.97        17
-      Moderate       0.96      0.97      0.96       622
-           USG       0.93      0.94      0.94       300
-     Unhealthy       0.98      0.95      0.96       579
-Very Unhealthy       0.98      0.98      0.98       264
-     Hazardous       0.98      0.99      0.98       666
+          Good     1.0000    0.9412    0.9697        17
+      Moderate     0.9556    0.9695    0.9625       622
+           USG     0.9340    0.9433    0.9386       300
+     Unhealthy     0.9768    0.9465    0.9614       579
+Very Unhealthy     0.9774    0.9848    0.9811       264
+     Hazardous     0.9791    0.9865    0.9828       666
 
-      accuracy                           0.97      2448
-     macro avg       0.97      0.96      0.97      2448
-  weighted avg       0.97      0.97      0.97      2448
+      accuracy                         0.9669      2448
+     macro avg     0.9705    0.9620    0.9660      2448
+  weighted avg     0.9670    0.9669    0.9669      2448
 
+
+ROC-AUC Scores per class:
+----------------------------------------
+  Good                : 1.0000
+  Moderate            : 0.9977
+  USG                 : 0.9972
+  Unhealthy           : 0.9976
+  Very Unhealthy      : 0.9995
+  Hazardous           : 0.9995
+----------------------------------------
+  Macro-average       : 0.9986
+
+✓ ROC curve plot saved: ./results/features_resnet50_quantum_firefly.png

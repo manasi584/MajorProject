@@ -93,14 +93,27 @@ TEST ACCURACY:       0.9734 (97.34%)
 Classification Report (Test Set):
                 precision    recall  f1-score   support
 
-          Good       1.00      1.00      1.00        17
-      Moderate       0.97      0.98      0.97       622
-           USG       0.94      0.98      0.96       300
-     Unhealthy       0.99      0.94      0.96       579
-Very Unhealthy       0.99      0.98      0.99       264
-     Hazardous       0.97      0.99      0.98       666
+          Good     1.0000    1.0000    1.0000        17
+      Moderate     0.9712    0.9759    0.9735       622
+           USG     0.9363    0.9800    0.9577       300
+     Unhealthy     0.9856    0.9447    0.9647       579
+Very Unhealthy     0.9923    0.9811    0.9867       264
+     Hazardous     0.9749    0.9895    0.9821       666
 
-      accuracy                           0.97      2448
-     macro avg       0.98      0.98      0.98      2448
-  weighted avg       0.97      0.97      0.97      2448
+      accuracy                         0.9734      2448
+     macro avg     0.9767    0.9785    0.9775      2448
+  weighted avg     0.9738    0.9734    0.9734      2448
 
+
+ROC-AUC Scores per class:
+----------------------------------------
+  Good                : 1.0000
+  Moderate            : 0.9987
+  USG                 : 0.9988
+  Unhealthy           : 0.9987
+  Very Unhealthy      : 0.9998
+  Hazardous           : 0.9994
+----------------------------------------
+  Macro-average       : 0.9992
+
+✓ ROC curve plot saved: ./results/features_mobilenet_quantum_firefly.png

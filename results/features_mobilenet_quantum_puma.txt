@@ -80,14 +80,27 @@ TEST ACCURACY:       0.9833 (98.33%)
 Classification Report (Test Set):
                 precision    recall  f1-score   support
 
-          Good       1.00      1.00      1.00        17
-      Moderate       0.98      0.98      0.98       622
-           USG       0.99      0.97      0.98       300
-     Unhealthy       0.98      0.98      0.98       579
-Very Unhealthy       0.99      0.99      0.99       264
-     Hazardous       0.99      0.99      0.99       666
+          Good     1.0000    1.0000    1.0000        17
+      Moderate     0.9776    0.9839    0.9808       622
+           USG     0.9864    0.9667    0.9764       300
+     Unhealthy     0.9809    0.9775    0.9792       579
+Very Unhealthy     0.9924    0.9886    0.9905       264
+     Hazardous     0.9851    0.9925    0.9888       666
 
-      accuracy                           0.98      2448
-     macro avg       0.99      0.98      0.99      2448
-  weighted avg       0.98      0.98      0.98      2448
+      accuracy                         0.9833      2448
+     macro avg     0.9871    0.9849    0.9860      2448
+  weighted avg     0.9833    0.9833    0.9832      2448
 
+
+ROC-AUC Scores per class:
+----------------------------------------
+  Good                : 1.0000
+  Moderate            : 0.9991
+  USG                 : 0.9991
+  Unhealthy           : 0.9993
+  Very Unhealthy      : 0.9998
+  Hazardous           : 0.9996
+----------------------------------------
+  Macro-average       : 0.9995
+
+✓ ROC curve plot saved: ./results/features_mobilenet_quantum_puma.png

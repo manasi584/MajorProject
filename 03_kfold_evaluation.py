@@ -1,6 +1,7 @@
 # /// script
 # requires-python = ">=3.9"
 # dependencies = [
+#     "matplotlib>=3.9.4",
 #     "numpy>=2.0.2",
 #     "scikit-learn>=1.6.1",
 #     "tensorflow>=2.15.0",
@@ -30,7 +31,9 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import StratifiedKFold, train_test_split
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, roc_curve, auc, roc_auc_score
+from sklearn.preprocessing import label_binarize
+import matplotlib.pyplot as plt
 
 import torch
 import torch.nn as nn
@@ -199,8 +202,72 @@ def build_simple_model(input_dim, num_classes=6):
 # K-FOLD EVALUATION
 # ==========================================
 
+def compute_roc_auc(y_test, test_preds, results_dir="./results", feature_name="", feature_selection=""):
+    """
+    Compute ROC-AUC for multiclass classification and plot curves
+
+    Args:
+        y_test: Test labels (class indices)
+        test_preds: Prediction probabilities (n_samples, n_classes)
+        results_dir: Directory to save plots
+        feature_name: Feature extraction method name
+        feature_selection: Feature selection method name
+    """
+    n_classes = test_preds.shape[1]
+
+    # Binarize labels
+    y_test_bin = label_binarize(y_test, classes=range(n_classes))
+
+    # Compute ROC curve and AUC for each class
+    fpr = dict()
+    tpr = dict()
+    roc_auc = dict()
+
+    class_names = ["Good", "Moderate", "USG", "Unhealthy", "Very Unhealthy", "Hazardous"]
+
+    print("\nROC-AUC Scores per class:")
+    print("-" * 40)
+
+    for i in range(n_classes):
+        fpr[i], tpr[i], _ = roc_curve(y_test_bin[:, i], test_preds[:, i])
+        roc_auc[i] = auc(fpr[i], tpr[i])
+        print(f"  {class_names[i]:20s}: {roc_auc[i]:.4f}")
+
+    # Compute macro-average ROC-AUC
+    macro_auc = np.mean(list(roc_auc.values()))
+    print("-" * 40)
+    print(f"  {'Macro-average':20s}: {macro_auc:.4f}")
+
+    # Plot ROC curves
+    plt.figure(figsize=(10, 8))
+    colors = plt.cm.Set3(np.linspace(0, 1, n_classes))
+
+    for i, color in zip(range(n_classes), colors):
+        plt.plot(fpr[i], tpr[i], color=color, lw=2,
+                label=f'{class_names[i]} (AUC = {roc_auc[i]:.3f})')
+
+    plt.plot([0, 1], [0, 1], 'k--', lw=2, label='Random Classifier')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate', fontsize=12)
+    plt.ylabel('True Positive Rate', fontsize=12)
+    plt.title('ROC Curves for Multi-Class Classification', fontsize=14, fontweight='bold')
+    plt.legend(loc="lower right", fontsize=10)
+    plt.grid(alpha=0.3)
+
+    roc_filename = f"{feature_name}_{feature_selection}.png"
+    roc_plot_path = os.path.join(results_dir, roc_filename)
+    plt.savefig(roc_plot_path, dpi=300, bbox_inches='tight')
+    plt.close()
+
+    print(f"\n✓ ROC curve plot saved: {roc_plot_path}")
+
+    return roc_auc, macro_auc
+
+
 def kfold_evaluation(X_features, y_labels, n_splits=5, epochs=30, batch_size=32,
-                     seed=42, checkpoint_dir="./models", pm25_max=1.0, selected_indices=None):
+                     seed=42, checkpoint_dir="./models", pm25_max=1.0, selected_indices=None,
+                     results_dir="./results", feature_name="", feature_selection=""):
     """
     Perform k-fold cross-validation with simple FC model
 
@@ -214,12 +281,17 @@ def kfold_evaluation(X_features, y_labels, n_splits=5, epochs=30, batch_size=32,
         checkpoint_dir: Directory to save model checkpoints
         pm25_max: Max PM2.5 value for denormalization
         selected_indices: Array of selected feature indices (None = use all features)
+        results_dir: Directory to save results and plots
+        feature_name: Feature extraction method name
+        feature_selection: Feature selection method name
 
     Returns:
         cv_score: Cross-validation accuracy
         test_score: Test accuracy
         y_test: Test labels
         y_pred: Test predictions
+        roc_auc: Dictionary of ROC-AUC scores per class
+        macro_auc: Macro-average ROC-AUC
     """
 
     # Use selected features if provided
@@ -313,10 +385,14 @@ def kfold_evaluation(X_features, y_labels, n_splits=5, epochs=30, batch_size=32,
     print(classification_report(
         y_test, test_labels,
         target_names=["Good", "Moderate", "USG", "Unhealthy", "Very Unhealthy", "Hazardous"],
-        zero_division=0
+        zero_division=0,
+        digits=4
     ))
 
-    return cv_score, test_score, y_test, test_labels
+    # Compute ROC-AUC
+    roc_auc, macro_auc = compute_roc_auc(y_test, test_preds, results_dir, feature_name, feature_selection)
+
+    return cv_score, test_score, y_test, test_labels, roc_auc, macro_auc
 
 # ==========================================
 # MAIN
@@ -324,7 +400,7 @@ def kfold_evaluation(X_features, y_labels, n_splits=5, epochs=30, batch_size=32,
 
 if __name__ == "__main__":
     # Configuration
-    FEATURES_PATH = "./features_mobilenet.npz"  # or features_resnet50.npz
+    FEATURES_PATH = "./features_efficientnet.npz"  # or features_resnet50.npz
     FEATURE_SELECTION = "quantum_firefly"  # Options: "none", "quantum_puma", "quantum_firefly", "quantum_reptile", "firefly"
     N_FEATURES = 500  # Number of features to select (None = keep all)
 
@@ -455,7 +531,7 @@ if __name__ == "__main__":
         )
 
     # Run evaluation
-    cv_score, test_score, y_test, y_pred = kfold_evaluation(
+    cv_score, test_score, y_test, y_pred, roc_auc, macro_auc = kfold_evaluation(
         X_combined, y,
         n_splits=N_SPLITS,
         epochs=EPOCHS,
@@ -463,7 +539,10 @@ if __name__ == "__main__":
         seed=SEED,
         checkpoint_dir=CHECKPOINT_DIR,
         pm25_max=PM25_MAX,
-        selected_indices=selected_indices
+        selected_indices=selected_indices,
+        results_dir=RESULTS_DIR,
+        feature_name=feature_name,
+        feature_selection=FEATURE_SELECTION
     )
 
     # Close logger and restore stdout
